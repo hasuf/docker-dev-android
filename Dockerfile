@@ -68,7 +68,6 @@ RUN alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 200000
 ## Android Studio
 WORKDIR /tmp/
 RUN wget http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip 
-RUN wget http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz 
 
 RUN mkdir -p /usr/local/bin
 RUN mkdir -p /usr/local/share
@@ -84,9 +83,6 @@ RUN chown -R user.user /usr/local/
 
 RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user 
-
-WORKDIR /home/user
-RUN if [ ! -e android-sdk-linux ]; then tar xvfz /tmp/android-sdk_r24.1.2-linux.tgz; chown -R user.user android-sdk-linux;fi
 
 # switch to user and run program
 USER user
