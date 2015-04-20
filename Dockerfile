@@ -27,6 +27,7 @@ RUN yum -y install \
    qemu-kvm \
    sudo \
    unzip \
+   tar \
    terminus-fonts \
    wget \
    xdialog \
@@ -65,8 +66,9 @@ RUN alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 200000
 
 
 ## Android Studio
-ADD http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip /tmp/
-ADD http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz /tmp/
+WORKDIR /tmp/
+RUN wget http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip 
+RUN wget http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz 
 
 RUN mkdir -p /usr/local/bin
 RUN mkdir -p /usr/local/share
@@ -75,19 +77,16 @@ ADD menu.sh /usr/local/bin/
 ADD moony-avatar-eyes-small.xpm /usr/local/share/
 ADD kvm-mknod.sh /usr/local/bin/
 
-
+# set up android studio on /usr/local
 WORKDIR /usr/local
 RUN unzip /tmp/android-studio-ide*
+RUN chown -R user.user /usr/local/
 
 RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user 
 
- 
-# set up ownership
-RUN chown -R user.user /usr/local/
-
-
-RUN /usr/local/bin/kvm-mknod.sh
+WORKDIR /home/user
+RUN if [ ! -e android-sdk-linux ]; then tar xvfz /tmp/android-sdk_r24.1.2-linux.tgz; chown -R user.user android-sdk-linux;fi
 
 # switch to user and run program
 USER user
@@ -96,7 +95,6 @@ WORKDIR /home/user
 ENV JAVA_HOME /usr/java/latest
 
 # unzip sdk if it don't exist
-RUN if [ ! -e android-sdk-linux ]; then tar xvfz /tmp/android-sdk_r24.1.2-linux.tgz; fi
 
 USER root
 CMD    /usr/bin/bash /usr/local/bin/init.sh
