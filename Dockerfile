@@ -18,10 +18,10 @@ RUN yum -y install \
    unzip \
    terminus-fonts \
    wget \
+   xdialog \
    xorg-x11-fonts-misc \
    xorg-x11-font-utils \
-   xorg-x11-xauth \
-   zenity
+   xorg-x11-xauth 
 
 
 
