@@ -1,55 +1,72 @@
 FROM fedora
 
 # Install the appropriate software
-#RUN yum -y update && yum clean all
-#RUN yum -y install firefox \
-#xorg-x11-twm tigervnc-server \
-#xterm xorg-x11-font \
-#xulrunner-26.0-2.fc20.x86_64 \
-#dejavu-sans-fonts \
-#dejavu-serif-fonts \
-#xdotool && yum clean all
 RUN yum -y install yum-plugin-fastestmirror
-RUN yum -y install openssh-server xorg-x11-xauth
-#RUN yum -y install firefox tigervnc-server
-RUN yum -y install firefox 
-#RUN yum -y groupinstall "LXDE Desktop"
+RUN yum -y install \
+   bitstream-vera-sans-fonts \
+   bitstream-vera-serif-fonts \
+   bitstream-vera-sans-mono-fonts \
+   bitstream-vera-fonts-common \
+   coreutils \
+   fontpackages-filesystem \
+   fontconfig \
+   libXfont \
+   libXtst \
+   libfontenc \
+   lyx-fonts \
+   passwd \
+   unzip \
+   terminus-fonts \
+   wget \
+   xorg-x11-fonts-misc \
+   xorg-x11-font-utils \
+   xorg-x11-xauth \
+   zenity
 
-# Add the xstartup file into the image and set the default password.
+
+
+RUN yum -y install terminology
+
+# set up root passwd **NOTE** INSECURE!!
+RUN echo insecure | passwd --stdin root
+
+# Add a user
 RUN useradd -ms /bin/bash user
-#RUN mkdir /home/user/.vnc
-#ADD ./xstartup /home/user/.vnc/
-ADD ./sshkey_id_rsa /home/user/.ssh/id_rsa
-ADD ./sshkey_id_rsa.pub /home/user/.ssh/authorized_keys
 
-ADD ./sshkey_id_rsa /root/.ssh/id_rsa
-ADD ./sshkey_id_rsa.pub /root/.ssh/authorized_keys
+# get jdk
+RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.rpm"
+RUN yes | rpm -Uvh jdk-8u45-linux-x64.rpm
+
+## java ##
+RUN alternatives --install /usr/bin/java java /usr/java/latest/jre/bin/java 200000
+## javaws ##
+RUN alternatives --install /usr/bin/javaws javaws /usr/java/latest/jre/bin/javaws 200000
+ 
+## Java Browser (Mozilla) Plugin 64-bit ##
+# No Browser installed RUN alternatives --install /usr/lib64/mozilla/plugins/libjavaplugin.so libjavaplugin.so.x86_64 /usr/java/latest/jre/lib/amd64/libnpjp2.so 200000
+ 
+## Install javac only if you installed JDK (Java Development Kit) package ##
+RUN alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
+RUN alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 200000
 
 
-ADD ./ssh_host_ecdsa_key /etc/ssh/
-ADD ./ssh_host_ecdsa_key.pub /etc/ssh/
+## Android Studio
+ADD http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip /tmp/
 
-ADD ./ssh_host_rsa_key /etc/ssh/
-ADD ./ssh_host_rsa_key.pub /etc/ssh/
+ADD menu.sh /home/user/menu.sh
+ADD moony-avatar-eyes-small.xpm /home/user/
 
-ADD ./ssh_host_ed25519_key /etc/ssh/
-ADD ./ssh_host_ed25519_key.pub /etc/ssh/
+WORKDIR /usr/local
+RUN unzip /tmp/android-studio-ide*
 
-RUN cat /etc/ssh/sshd_config
+ 
+# set up ownership
+RUN chown -R user.user /usr/local/
 
-#RUN chmod -v +x /home/user/.vnc/xstartup
-#RUN echo 123456 | vncpasswd -f > /home/user/.vnc/passwd
-#RUN chmod -v 600 /home/user/.vnc/passwd
-RUN chown -R user.user /home/user
-RUN echo "Port 4444" >> /etc/ssh/sshd_config
-RUN echo "X11Forwarding yes" >> /etc/ssh/sshd_config
-RUN echo "Ciphers arcfour" >> /etc/ssh/sshd_config
-RUN env|grep DISPLAY
-
-#RUN sed -i '/\/etc\/X11\/xinit\/xinitrc-common/a [ -x /usr/bin/firefox ] && /usr/bin/firefox &' /etc/X11/xinit/xinitrc
-
-EXPOSE 4444
-#CMD    ["/usr/sbin/sshd", "-D" ]
+# switch to user and run program
 USER user
 ENV HOME /home/user
-CMD    ["/usr/bin/firefox"]
+WORKDIR /home/user
+ENV JAVA_HOME /usr/java/latest
+
+CMD    /usr/bin/bash /home/user/menu.sh
