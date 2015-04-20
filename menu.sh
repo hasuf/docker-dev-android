@@ -1,7 +1,10 @@
 #!/bin/bash
 
+
+ICON=/usr/local/share/moony-avatar-eyes-small.xpm 
+
 while [ 1 -eq 1 ] ; do
-   ANSWER=`Xdialog --no-cancel --stdout --no-tags --icon ~/moony-avatar-eyes-small.xpm --menubox "Select Action" 0 0 8 term "Launch Terminal" studio "Launch Android Studio" exit "Exit"`
+   ANSWER=`Xdialog --no-cancel --stdout --no-tags --icon $ICON --menubox "Select Action" 0 0 8 term "Launch Terminal" studio "Launch Android Studio" exit "Exit"`
 
   if [ "$ANSWER" == "term" ] ; then
       terminology&
@@ -10,7 +13,7 @@ while [ 1 -eq 1 ] ; do
       if [ "$RUNNING" == "" ] ; then
           /usr/local/android*/bin/studio.sh&
       else
-          Xdialog --icon ~/moony-avatar-eyes-small.xpm --msgbox "Android Studio is already running" 0 0
+          Xdialog --icon $ICON --msgbox "Android Studio is already running" 0 0
       fi
   elif [ "$ANSWER" == "exit" ] ; then
       exit

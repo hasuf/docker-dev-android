@@ -8,6 +8,13 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+
+  # make sure the dev has defined DEVDIR
+  if !ENV["DEVDIR"]
+    raise(Exception, "undefined DEVDIR environment variable")  
+  end
+
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -40,6 +47,7 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder  ENV["DEVDIR"], "/home/user/"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -59,10 +67,11 @@ Vagrant.configure(2) do |config|
   config.vm.provider "docker" do |d|
     # look for Dockerfile in same dir as Vagrantfile
     d.build_dir = "."
-    d.env = {"DISPLAY" => ENV["DISPLAY"] }
+    d.env = {"DISPLAY" => ENV["DISPLAY"] , "DEVUSER_ID" => ENV["DEVUSER_ID"], "DEVUSER_GID" => ENV["DEVUSER_GID"]}
     d.remains_running = true
     d.ports = ["5901:5901", "4444:4444"]
     d.volumes = ["/tmp/.X11-unix:/tmp/.X11-unix"]
+    d.privileged = true
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies

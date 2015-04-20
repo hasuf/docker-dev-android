@@ -10,11 +10,22 @@ RUN yum -y install \
    coreutils \
    fontpackages-filesystem \
    fontconfig \
+   git \
+   libgcc \
+   libgcc.i686 \
+   libfontenc \
+   libstdc++ \
+   libstdc++.i686 \
    libXfont \
    libXtst \
-   libfontenc \
+   libz.so.1 \
+   llvm \
    lyx-fonts \
+   man \
+   mesa-dri-drivers \
    passwd \
+   qemu-kvm \
+   sudo \
    unzip \
    terminus-fonts \
    wget \
@@ -31,7 +42,10 @@ RUN yum -y install terminology
 RUN echo insecure | passwd --stdin root
 
 # Add a user
-RUN useradd -ms /bin/bash user
+RUN env
+RUN groupadd -g 1000 user
+RUN useradd -g 1000 -u 600  -ms /bin/bash user
+RUN usermod -a -G video user
 
 # get jdk
 RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.rpm"
@@ -52,16 +66,28 @@ RUN alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 200000
 
 ## Android Studio
 ADD http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip /tmp/
+ADD http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz /tmp/
 
-ADD menu.sh /home/user/menu.sh
-ADD moony-avatar-eyes-small.xpm /home/user/
+RUN mkdir -p /usr/local/bin
+RUN mkdir -p /usr/local/share
+ADD init.sh /usr/local/bin/
+ADD menu.sh /usr/local/bin/
+ADD moony-avatar-eyes-small.xpm /usr/local/share/
+ADD kvm-mknod.sh /usr/local/bin/
+
 
 WORKDIR /usr/local
 RUN unzip /tmp/android-studio-ide*
 
+RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user && \
+    chmod 0440 /etc/sudoers.d/user 
+
  
 # set up ownership
 RUN chown -R user.user /usr/local/
+
+
+RUN /usr/local/bin/kvm-mknod.sh
 
 # switch to user and run program
 USER user
@@ -69,4 +95,8 @@ ENV HOME /home/user
 WORKDIR /home/user
 ENV JAVA_HOME /usr/java/latest
 
-CMD    /usr/bin/bash /home/user/menu.sh
+# unzip sdk if it don't exist
+RUN if [ ! -e android-sdk-linux ]; then tar xvfz /tmp/android-sdk_r24.1.2-linux.tgz; fi
+
+USER root
+CMD    /usr/bin/bash /usr/local/bin/init.sh
