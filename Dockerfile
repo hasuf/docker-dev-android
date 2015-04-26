@@ -35,20 +35,19 @@ RUN yum -y install \
    xorg-x11-font-utils \
    xorg-x11-xauth 
 
-
-
+# install a good terminal 
 RUN yum -y install terminology
 
 # set up root passwd **NOTE** INSECURE!!
 RUN echo insecure | passwd --stdin root
 
 # Add a user
-RUN env
+# NOTE: Would love to parameterize the user and group ID. But... how?
 RUN groupadd -g 1000 user
 RUN useradd -g 1000 -u 600  -ms /bin/bash user
 RUN usermod -a -G video user
 
-# get jdk
+# get jdk... java 8u45
 RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.rpm"
 RUN yes | rpm -Uvh jdk-8u45-linux-x64.rpm
 
