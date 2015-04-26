@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
     d.remains_running = true
     # for running X gui's. Must run xhost+ on host
     d.env = {"DISPLAY" => ENV["DISPLAY"]}
-    d.volumes = ["/tmp/.X11-unix:/tmp/.X11-unix"]
+    d.volumes = ["/tmp/.X11-unix:/tmp/.X11-unix", "/dev/bus/usb:/dev/bus/usb"]
     # for using kvm emulation
     d.privileged = true
   end

@@ -7,7 +7,6 @@ RUN yum -y install \
    bitstream-vera-serif-fonts \
    bitstream-vera-sans-mono-fonts \
    bitstream-vera-fonts-common \
-   coreutils \
    fontpackages-filesystem \
    fontconfig \
    git \
@@ -29,6 +28,7 @@ RUN yum -y install \
    unzip \
    tar \
    terminus-fonts \
+   usbutils \
    wget \
    xdialog \
    xorg-x11-fonts-misc \
@@ -68,6 +68,7 @@ RUN alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 200000
 ## Android Studio
 WORKDIR /tmp/
 RUN wget http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip 
+RUN wget "https://plugins.jetbrains.com/plugin/download?pr=&updateId=18014"
 
 RUN mkdir -p /usr/local/bin
 RUN mkdir -p /usr/local/share
@@ -80,17 +81,19 @@ ADD kvm-mknod.sh /usr/local/bin/
 WORKDIR /usr/local
 RUN unzip /tmp/android-studio-ide*
 RUN chown -R user.user /usr/local/
+WORKDIR /usr/local/android-studio/plugins
+RUN unzip /tmp/ideavim-*.zip
 
 RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user 
+
+RUN echo "set -o vi" >> /etc/bashrc
 
 # switch to user and run program
 USER user
 ENV HOME /home/user
 WORKDIR /home/user
 ENV JAVA_HOME /usr/java/latest
-
-# unzip sdk if it don't exist
 
 USER root
 CMD    /usr/bin/bash /usr/local/bin/init.sh
