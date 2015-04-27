@@ -13,9 +13,10 @@ Within this (Fedora 21) environment, the following features are available:
 * Accelerated Android Emulator (assuming VTX is available)
 * Access to connected Android devices through the container
 * All the necessary Fedora packages for the above
-* All GUIs are run leveraging your local X server (no VNC'ing or ssh'ing to run programs like Android Studio).
+* All GUIs are run leveraging your local X server (ie, no VNC'ing or ssh'ing to run programs like Android Studio).
+* The environment uses [Docker volumes](https://docs.docker.com/reference/builder/#volume) to map a directory that will be used as the dev user's home directory. It's in this directory where you can store persistent data (Android studio settings, code, etc).
 
-The environment uses [Docker volumes](https://docs.docker.com/reference/builder/#volume) to map a directory that will be used as the dev user's home directory. It's in this directory where you can store persistent data (Android studio settings, code, etc).
+**NOTE: Vagrant makes it easy to package up extra Docker configuration. It's also supposed to allow you to set up Docker under non-Linux environments. However, I have not tested this. (See Limitations section.)**
 
 
 Getting Up and Running
@@ -27,12 +28,16 @@ Getting Up and Running
         git clone https://hasuf@bitbucket.org/trumpa/dev-android.git
 
 1. There are some things you might want to consider before launching Vagrant:
-    1. **User and Group ID.** To make things easy on you and allow you to interoperate with files both inside and outside the container, you might want to edit the id's of the user and its group. ie, in the Dockerfile, edit the lines:
+    1. **User and Group ID.** To make things easy on you and allow you to interoperate with files 
+       both inside and outside the container, you might want to edit the id's of the user and its   
+       group. ie, in the Dockerfile, edit the lines:
          
                 RUN groupadd -g 1000 devuser        
                 RUN useradd -g 1000 -u 600  -ms /bin/bash devuser
         
-          so that the id's for the group and user match your own. You can determine your own user and group id by running the following commands in your regular environment:
+        so that the id's for the group and user match your own in your local environment. You can 
+        determine your own user and group id by running the following commands in your local 
+        environment:
 
                 $ # determine my user id
                 $ id -u
@@ -41,29 +46,41 @@ Getting Up and Running
                 $ id -g
                 1048
         
-        Replace the 1000 and 600 with your own group id and user id, respectively. eg (from the above example):
+        Replace the 1000 and 600 with your own group id and user id, respectively. eg (from the above 
+        example):
 
                 RUN groupadd -g 1048 devuser        
                 RUN useradd -g 1048 -u 681  -ms /bin/bash devuser
         
-        Once this is done, anytime you edit files in the container, you'll by default have the same ownership as your normal user outside the container.
+        Once this is done, anytime you edit files in the container, you'll by default have the same 
+        ownership as your normal user outside the container.
 
-      1. **DEVDIR.** Determine where, on your filesystem, you want to designate the dev user's home directory. eg, if you may want to designate `/home/myaccount/work` as your android development path. **NOTE that the path must already exist.**
+      1. **DEVDIR.** Determine where, on your filesystem, you want to designate the dev user's home 
+      directory. eg, if you may want to designate `/home/myaccount/work` as your android development 
+      path. This results in the ability to persist data between your local environment and the 
+      container. **NOTE that the path must already exist.**
 
-   1. Launch Vagrant. The Vagrantfile requires setting that the DEVDIR be passed as an environment variable. If DEVDIR is not set, you'll get an error.
+   1. Give you permission for the containerized GUIs to access your X server:
 
-       You can do this:
+                $ xhost +local:
+      
+      (You might want to consider adding that to your .bashrc file.)
+                
+   1. Launch Vagrant. The Vagrantfile requires setting that the DEVDIR be passed as an environment 
+      variable. If DEVDIR is not set, you'll get an error.
+
+      You can do this:
        
                 sudo DEVDIR=/home/myaccount/work vagrant up
             
-       Or, you can set up the environment variable in your .bashrc file, for instance:
+      Or, you can set up the environment variable in your .bashrc file, for instance:
         
                 # set up DEVDIR for dev-android setup
                 export DEVDIR=/home/myaccount/work
                 
-       And then your can just run the following:
+      And then you can just run the following:
        
-                vagrant up
+                sudo vagrant up
    
 
 Quick User Guide
