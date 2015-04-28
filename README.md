@@ -86,7 +86,7 @@ When you fire up the Docker environment, and after all the software is downloade
 
 You can launch as many terminals as you like, but you can only launch the Android Studio once.
 
-The launcher is just an XDialog running in a loop. Selecting anything besides Exit will bring the launcher up again. Just minimize it 
+The launcher is just an XDialog running in a loop. Selecting anything besides Exit will bring the launcher up again. Just minimize it to get it out of the way.
 
 Exiting will cause the Docker session to end (therefore, it's a good idea to make sure you don't have any processes like Android Studio with unsaved data).
 
