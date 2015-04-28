@@ -56,7 +56,7 @@ Getting Up and Running
         ownership as your normal user outside the container.
 
       1. **DEVDIR.** Determine where, on your filesystem, you want to designate the dev user's home 
-      directory. eg, if you may want to designate `/home/myaccount/work` as your android development 
+      directory. eg, you may want to designate `/home/myaccount/work` as your android development 
       path. This results in the ability to persist data between your local environment and the 
       container. **NOTE that the path must already exist.**
 
