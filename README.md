@@ -25,7 +25,7 @@ Getting Up and Running
 1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with [1.5.0*](#version)
 1. Retrieve the dev-android files.
 
-        git clone https://hasuf@bitbucket.org/trumpa/dev-android.git
+        https://github.com/hasuf/docker-dev-android.git
 
 1. There are some things you might want to consider before launching Vagrant:
     1. **User and Group ID.** To make things easy on you and allow you to interoperate with files 
