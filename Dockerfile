@@ -43,9 +43,9 @@ RUN echo insecure | passwd --stdin root
 
 # Add a user
 # NOTE: Would love to parameterize the user and group ID. But... how?
-RUN groupadd -g 1000 user
-RUN useradd -g 1000 -u 600  -ms /bin/bash user
-RUN usermod -a -G video user
+RUN groupadd -g 1000 devuser
+RUN useradd -g 1000 -u 600  -ms /bin/bash devuser
+RUN usermod -a -G video devuser
 
 # get jdk... java 8u45
 RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.rpm"
@@ -79,19 +79,19 @@ ADD kvm-mknod.sh /usr/local/bin/
 # set up android studio on /usr/local
 WORKDIR /usr/local
 RUN unzip /tmp/android-studio-ide*
-RUN chown -R user.user /usr/local/
+RUN chown -R devuser.devuser /usr/local/
 WORKDIR /usr/local/android-studio/plugins
 RUN unzip /tmp/ideavim.zip
 
-RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user && \
-    chmod 0440 /etc/sudoers.d/user 
+RUN echo "devuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/devuser && \
+    chmod 0440 /etc/sudoers.d/devuser 
 
 RUN echo "set -o vi" >> /etc/bashrc
 
 # switch to user and run program
-USER user
-ENV HOME /home/user
-WORKDIR /home/user
+USER devuser
+ENV HOME /home/devuser
+WORKDIR /home/devuser
 ENV JAVA_HOME /usr/java/latest
 
 USER root
