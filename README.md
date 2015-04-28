@@ -23,7 +23,7 @@ Getting Up and Running
 ----------------------
 1. Download and install [Vagrant](http://www.vagrantup.com). Note: Tested with 1.7.2
 1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with [1.5.0*](#version)
-1. Retrieve the dev-android files.
+1. Retrieve the docker-dev-android files.
 
         https://github.com/hasuf/docker-dev-android.git
 
