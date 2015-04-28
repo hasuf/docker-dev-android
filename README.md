@@ -21,8 +21,8 @@ Within this (Fedora 21) environment, the following features are available:
 
 Getting Up and Running
 ----------------------
-1. Download and install [Vagrant](http://www.vagrantup.com).
-1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running)
+1. Download and install [Vagrant](http://www.vagrantup.com). Note: Tested with 1.7.2
+1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with 1.5.0*
 1. Retrieve the dev-android files.
 
         git clone https://hasuf@bitbucket.org/trumpa/dev-android.git
@@ -69,29 +69,40 @@ Getting Up and Running
    1. Launch Vagrant. The Vagrantfile requires setting that the DEVDIR be passed as an environment 
       variable. If DEVDIR is not set, you'll get an error.
 
-      You can do this:
+      For example:
        
                 sudo DEVDIR=/home/myaccount/work vagrant up
-            
-      Or, you can set up the environment variable in your .bashrc file, for instance:
-        
-                # set up DEVDIR for dev-android setup
-                export DEVDIR=/home/myaccount/work
                 
-      And then you can just run the following:
-       
-                sudo vagrant up
+      Note, that on first launch, when Docker needs to set up the container, setup can take tens of 
+      minutes. However, after that, starting up the container with Vagrant should be quick.
+            
    
 
 Quick User Guide
 ----------------
 When you fire up the Docker environment, and after all the software is downloaded, installed, and configured (it will take a while to download and configure everything), you're presented with a simple launcher that allows you to either start up Android Studio, launch a terminal window (from within the container's context), or exit the container. 
 
-Exiting will cause the Docker session to end (therefore, it's a good idea to make sure you don't have any processes running like Android Studio where you might lose some data).
+![Image of Launcher](launcher.png)
+
+You can launch as many terminals as you like, but you can only launch the Android Studio once.
+
+The launcher is just an XDialog running in a loop. Selecting anything besides Exit will bring the launcher up again. Just minimize it 
+
+Exiting will cause the Docker session to end (therefore, it's a good idea to make sure you don't have any processes like Android Studio with unsaved data).
+
+**A Note on the Terminal** Just for kicks, I install and use Terminology for the containerized terminal. (For one, it helps me distinguish between my regular Konsole terminal icons and the container-based Terminology ones.) If you prefer using a different terminal emulator, change these lines in the Dockerfile:
+
+        # install a good terminal 
+        RUN yum -y install terminology
+
 
 Limitations
 -----------
+As mentioned in the introduction, one of the intents for this project was to have a single environment set up for any platform (Linux, Mac, etc). Vagrant should automatically launch Docker in a container-supported OS within VirtualBox. However, I have not tested this, nor am I yet certain how to enable things like access to an attached device. Running GUIs using X should be doable, as noted in the References section.
 
 References
 ----------    
- 
+
+Footnotes
+---------
+* Between the time I started this project and the writing of this README, an updated Fedora package for docker-io had been released (1.6.0-2.git3eac457). I'm noticing weird interactions between Vagrant 1.7.2 and this version of docker-io. Let me know if notice anything weird, too. When I downgraded a separate local environment back to docker-io-1.5.0-2, things were working again.
