@@ -95,4 +95,5 @@ WORKDIR /home/user
 ENV JAVA_HOME /usr/java/latest
 
 USER root
-CMD    /usr/bin/bash /usr/local/bin/init.sh
+# give the name of the terminal program to run
+CMD    /usr/bin/bash /usr/local/bin/init.sh terminology
