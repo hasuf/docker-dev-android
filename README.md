@@ -4,7 +4,7 @@ Dockerized Android Development Environment with Vagrant
 Introduction
 ------------
 
-These Docker and Vagrant (and supporting) files allows one to create a fully self-contained Android development environment. All the necessary software is downloaded and configured, making set-up easy.
+These Docker and Vagrant (and supporting) files allow one to create a fully self-contained Android development environment. All the necessary software is downloaded and configured, making set-up easy.
 
 Within this (Fedora 21) environment, the following features are available:
 
@@ -16,13 +16,13 @@ Within this (Fedora 21) environment, the following features are available:
 * All GUIs are run leveraging your local X server (ie, no VNC'ing or ssh'ing to run programs like Android Studio).
 * The environment uses [Docker volumes](https://docs.docker.com/reference/builder/#volume) to map a directory that will be used as the dev user's home directory. It's in this directory where you can store persistent data (Android studio settings, code, etc).
 
-**NOTE: Vagrant makes it easy to package up extra Docker configuration. It's also supposed to allow you to set up Docker under non-Linux environments. However, I have not tested this. (See Limitations section.)**
+**NOTE: Vagrant makes it easy to package up extra Docker configuration. It's also supposed to allow you to set up Docker under non-Linux environments. However, I have not tested this. (See [Limitations](#limitations) section.)**
 
 
 Getting Up and Running
 ----------------------
 1. Download and install [Vagrant](http://www.vagrantup.com). Note: Tested with 1.7.2
-1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with 1.5.0*
+1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with [1.5.0*](#version)
 1. Retrieve the dev-android files.
 
         git clone https://hasuf@bitbucket.org/trumpa/dev-android.git
@@ -90,19 +90,26 @@ The launcher is just an XDialog running in a loop. Selecting anything besides Ex
 
 Exiting will cause the Docker session to end (therefore, it's a good idea to make sure you don't have any processes like Android Studio with unsaved data).
 
-**A Note on the Terminal** Just for kicks, I install and use Terminology for the containerized terminal. (For one, it helps me distinguish between my regular Konsole terminal icons and the container-based Terminology ones.) If you prefer using a different terminal emulator, change these lines in the Dockerfile:
+**A Note on the Terminal** Just for kicks, I install and use [Terminology](https://github.com/billiob/terminology) for the containerized terminal. (For one, it helps me distinguish between my regular Konsole terminal icons and the container-based Terminology ones.) If you prefer using a different terminal emulator, change these lines in the Dockerfile to use your favorite terminal program instead of *terminology*:
 
         # install a good terminal 
         RUN yum -y install terminology
+        ...
+        # give the name of the terminal program to run
+        CMD /usr/bin/bash /usr/local/bin/init.sh terminology
 
-
-Limitations
+Limitations <a name="limitations"></a>
 -----------
 As mentioned in the introduction, one of the intents for this project was to have a single environment set up for any platform (Linux, Mac, etc). Vagrant should automatically launch Docker in a container-supported OS within VirtualBox. However, I have not tested this, nor am I yet certain how to enable things like access to an attached device. Running GUIs using X should be doable, as noted in the References section.
 
 References
 ----------    
+1. [Setting up a development environment using Docker and Vagrant](http://blog.zenika.com/index.php?post/2014/10/07/Setting-up-a-development-environment-using-Docker-and-Vagrant), Blog Zenika, 2014-10-07 
+1. [Running GUI apps with Docker](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/), Fábio Rehm, 2014-09-11
+1. Running GUIs on OSX
+   1. [How to run a Linux GUI application on OSX using Docker](http://kartoza.com/how-to-run-a-linux-gui-application-on-osx-using-docker/), Tim Sutton, 2015-04-14
+   1. [Fiji Docker Docs, "On OSX" Section](http://fiji.sc/Docker#On_OSX)
 
 Footnotes
 ---------
-* Between the time I started this project and the writing of this README, an updated Fedora package for docker-io had been released (1.6.0-2.git3eac457). I'm noticing weird interactions between Vagrant 1.7.2 and this version of docker-io. Let me know if notice anything weird, too. When I downgraded a separate local environment back to docker-io-1.5.0-2, things were working again.
+<a name="version"></a>* Between the time I started this project and the writing of this README, an updated Fedora package for docker-io had been released (1.6.0-2.git3eac457). I'm noticing weird interactions between Vagrant 1.7.2 and this version of docker-io. Let me know if notice anything weird, too. When I downgraded a separate local environment back to docker-io-1.5.0-2, things were working again.
