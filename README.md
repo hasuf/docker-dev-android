@@ -22,7 +22,7 @@ Within this (Fedora 21) environment, the following features are available:
 Getting Up and Running
 ----------------------
 1. Download and install [Vagrant](http://www.vagrantup.com). Note: Tested with 1.7.2
-1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with [1.5.0*](#version)
+1. Download and install [Docker](http://www.docker.com). (Make sure the docker service is running) Note: Tested with 1.6.0-2
 1. Retrieve the docker-dev-android files.
 
         https://github.com/hasuf/docker-dev-android.git
@@ -32,8 +32,10 @@ Getting Up and Running
        both inside and outside the container, you might want to edit the id's of the user and its   
        group. ie, in the Dockerfile, edit the lines:
          
-                RUN groupadd -g 1000 devuser        
-                RUN useradd -g 1000 -u 600  -ms /bin/bash devuser
+                # Create user and group for devuser using specific id's
+                export GROUPID=1000 ; export USERID=600 \
+
+
         
         so that the id's for the group and user match your own in your local environment. You can 
         determine your own user and group id by running the following commands in your local 
@@ -49,8 +51,8 @@ Getting Up and Running
         Replace the 1000 and 600 with your own group id and user id, respectively. eg (from the above 
         example):
 
-                RUN groupadd -g 1048 devuser        
-                RUN useradd -g 1048 -u 681  -ms /bin/bash devuser
+                # Create user and group for devuser using specific id's
+                export GROUPID=1048 ; export USERID=681 \
         
         Once this is done, anytime you edit files in the container, you'll by default have the same 
         ownership as your normal user outside the container.
@@ -93,7 +95,7 @@ Exiting will cause the Docker session to end (therefore, it's a good idea to mak
 **A Note on the Terminal** Just for kicks, I install and use [Terminology](https://github.com/billiob/terminology) for the containerized terminal. (For one, it helps me distinguish between my regular Konsole terminal icons and the container-based Terminology ones.) If you prefer using a different terminal emulator, change these lines in the Dockerfile to use your favorite terminal program instead of *terminology*:
 
         # install a good terminal 
-        RUN yum -y install terminology
+        terminology \
         ...
         # give the name of the terminal program to run
         CMD /usr/bin/bash /usr/local/bin/init.sh terminology
@@ -110,6 +112,4 @@ References
    1. [How to run a Linux GUI application on OSX using Docker](http://kartoza.com/how-to-run-a-linux-gui-application-on-osx-using-docker/), Tim Sutton, 2015-04-14
    1. [Fiji Docker Docs, "On OSX" Section](http://fiji.sc/Docker#On_OSX)
 
-Footnotes
----------
-<a name="version"></a>* Between the time I started this project and the writing of this README, an updated Fedora package for docker-io had been released (1.6.0-2.git3eac457). I'm noticing weird interactions between Vagrant 1.7.2 and this version of docker-io. Let me know if notice anything weird, too. When I downgraded a separate local environment back to docker-io-1.5.0-2, things were working again.
+
