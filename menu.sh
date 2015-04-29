@@ -29,7 +29,7 @@ while [ 1 -eq 1 ] ; do
       BASE=`basename $0`
       # we could check for lots of processes, but let's at least check for
       # any running terminals or Android Studio
-      RUNNING_TERMS=`ps -efwwwwww|grep $TERMINAL_PROG|grep -v grep|grep -v $BASE|wc|awk '{print $1}'`
+      RUNNING_TERMS=`ps -efwwwwww|grep $TERMINAL_PROG|grep -v grep|grep -v $BASE|grep -v init.sh|wc|awk '{print $1}'`
       ANDROID_STUDIO_RUNNING=`ps -efwwwww|grep com.intellij.idea.Main|grep AndroidStudio|grep -v grep` 
       SHOW_WARNING=0
       WARNING="You have"
