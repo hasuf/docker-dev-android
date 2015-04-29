@@ -111,5 +111,8 @@ References
 1. Running GUIs on OSX
    1. [How to run a Linux GUI application on OSX using Docker](http://kartoza.com/how-to-run-a-linux-gui-application-on-osx-using-docker/), Tim Sutton, 2015-04-14
    1. [Fiji Docker Docs, "On OSX" Section](http://fiji.sc/Docker#On_OSX)
+1. Setting up acceleration for Android emulator
+   1. GitHub project: [qemu-docker](https://github.com/kevinwallace/qemu-docker), Kevin Wallace
+   1. GitHub project: [jenkins-android-docker](https://github.com/clemp6r/jenkins-android-docker), Clément Plantier
 
 
