@@ -13,13 +13,13 @@ while [ 1 -eq 1 ] ; do
    ANSWER=`Xdialog --title Launcher --no-cancel --stdout --no-tags --icon $ICON --menubox "Select Action" 0 0 8 term "Launch Terminal" studio "Launch Android Studio" exit "Exit"`
 
   if [ "$ANSWER" == "term" ] ; then
-      Xdialog --title Launcher --icon $ICON --infobox Starting... 0 0 1000&
+      Xdialog --title Launcher --icon $ICON --no-buttons --infobox Starting... 0 0 1000&
       ${TERMINAL_PROG}&
       sleep 2
   elif [ "$ANSWER" == "studio" ] ; then
       RUNNING=`ps -efwwwww|grep com.intellij.idea.Main|grep AndroidStudio|grep -v grep`
       if [ "$RUNNING" == "" ] ; then
-           Xdialog --title Launcher --icon $ICON --infobox Starting... 0 0 1000&
+           Xdialog --title Launcher --icon $ICON --no-buttons --infobox Starting... 0 0 1000&
           /usr/local/android*/bin/studio.sh&
           sleep 2
       else
