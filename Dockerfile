@@ -42,7 +42,7 @@ RUN yum -y install yum-plugin-fastestmirror ; \
 # NOTE: Would love to parameterize the user and group ID. But... how?
 RUN    \
        # Create user and group for devuser using specific id's
-       export GROUPID=1000 ; export USERID=600 \
+       export GROUPID=1000 ; export USERID=1000 \
     && groupadd -g $GROUPID devuser \
     && useradd -g $GROUPID -u $USERID -ms /bin/bash devuser \
     && usermod -a -G video devuser \
@@ -65,7 +65,7 @@ RUN    export JAVA_VERSION=8u45 ; export JAVA_BUILD=b14 \
 
 ## Android Studio
 RUN    cd /tmp \
-    && wget --quiet http://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip \
+    && wget --quiet https://dl.google.com/dl/android/studio/ide-zips/1.2.2.0/android-studio-ide-141.1980579-linux.zip \
     && wget --quiet "https://plugins.jetbrains.com/plugin/download?pr=&updateId=18014" -O ideavim.zip \
     && mkdir -p /usr/local/bin \
     && mkdir -p /usr/local/share \
